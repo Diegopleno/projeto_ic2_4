@@ -31,7 +31,7 @@ jobs:
       uses: appleboy/ssh-action@v1
       with:
           host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
