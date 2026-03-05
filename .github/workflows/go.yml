@@ -83,11 +83,11 @@ jobs:
     - name: Build
       run: go build -v ./...  # Fixed: Use ./... instead of main.go
 
-    - name: Build artefato 1
+    - name: upload
       uses: actions/upload-artifact@v4
       with:
         name: compilado
-        path: . 
+        path: / 
   
   Deploy_EC2:
     needs: build
