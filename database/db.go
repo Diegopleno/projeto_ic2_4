@@ -20,7 +20,7 @@ func ConectaComBancoDeDados() {
 			" user="+os.Getenv("USER")+
 			" password="+os.Getenv("PASSWORD")+
 			" dbname="+os.Getenv("DBNAME")+
-			" port="+os.Getenv("DBPORT")+
+			" port="+os.Getenv("DB_PORT")+
 			" sslmode=disable"
 
 	DB, err = gorm.Open(postgres.Open(stringDeConexao))
