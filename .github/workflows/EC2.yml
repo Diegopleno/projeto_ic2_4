@@ -16,7 +16,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: compilado
-        path: /
+        path: .
 
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@main
