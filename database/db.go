@@ -16,9 +16,9 @@ var (
 func ConectaComBancoDeDados() {
 
 	stringDeConexao := 
-		"host="+os.Getenv("HOST")+
-			" user="+os.Getenv("USER")+
-			" password="+os.Getenv("PASSWORD")+
+		"host="+os.Getenv("DBHOST")+
+			" user="+os.Getenv("DBUSER")+
+			" password="+os.Getenv("DBPASSWORD")+
 			" dbname="+os.Getenv("DBNAME")+
 			" port="+os.Getenv("DBPORT")+
 			" sslmode=disable"
