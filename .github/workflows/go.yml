@@ -82,3 +82,8 @@ jobs:
         
     - name: Build
       run: go build -v ./...  # Fixed: Use ./... instead of main.go
+
+  Deploy_EC2:
+    needs: build
+    uses: ./.github/workflows/EC2.yml
+    secrets: inherit
