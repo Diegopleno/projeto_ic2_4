@@ -12,7 +12,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4
       with:
-        name: programa        
+        name: compilado        
 
     - uses: actions/checkout@v3
 
