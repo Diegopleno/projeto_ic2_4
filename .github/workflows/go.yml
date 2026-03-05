@@ -1,0 +1,84 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        go_version: ['1.18', '1.19', '1.20']  # Fixed: Use specific versions
+        os: ['ubuntu-latest', 'ubuntu-22.04']  # ubuntu-18.04 is deprecated
+
+    services:
+      postgres:
+        image: postgres:17    
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: root
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4  # Updated to v4
+      with:
+        go-version: ${{ matrix.go_version }}
+      
+    - name: Wait for PostgreSQL
+      run: |
+        echo "Waiting for PostgreSQL to be ready..."
+        for i in {1..30}; do
+          if pg_isready -h 127.0.0.1 -p 5432; then
+            echo "PostgreSQL is ready!"
+            break
+          fi
+          echo "Waiting for PostgreSQL... attempt $i/30"
+          sleep 2
+        done
+      
+    - name: Install PostgreSQL client (for pg_isready)
+      run: |
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ] || [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+        fi
+      
+    - name: Test
+      run: go test -v ./...  # Fixed: Use ./... instead of main_test.go
+      env:
+        DB_HOST: 127.0.0.1  # Changed from 'postgres' to '127.0.0.1'
+        DB_USER: root
+        DB_PASSWORD: root
+        DB_NAME: root
+        DB_PORT: "5432"
+  
+  build:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'ubuntu-22.04']
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'  # Specify a default Go version
+        
+    - name: Build
+      run: go build -v ./...  # Fixed: Use ./... instead of main.go
